@@ -1,10 +1,19 @@
-# Proteus
+# Proteus 
+
+[![Stable Version](https://img.shields.io/github/v/tag/RobertBerglund/proteus?label=version)](https://img.shields.io/github/v/tag/RobertBerglund/proteus)
+
 Proteus is a tiny package for mapping values between structs using tags
+
+## Install
+
+```bash
+go get github.com/RobertBerglund/proteus
+```
 
 ## Examples
 
 ### Simple mapping 
-```
+```go
 type Src struct {
 	ValA string `dst:"Val1"`
 	ValB string `dst:"Val2"`
@@ -31,7 +40,7 @@ fmt.Printf("%+v", dst)
 
 An empty tag value will "flatten" the struct
 
-```
+```go
 type SrcEmbedded struct {
 	Src `dst:""`
 }
@@ -49,7 +58,7 @@ fmt.Printf("%+v", dst)
 
 ### Nested structs
 
-```
+```go
 type SrcNested struct {
 	SrcInner Src `dst:"DstInner"`
 }
