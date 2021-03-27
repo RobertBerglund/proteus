@@ -31,13 +31,14 @@ func (p proteanImpl) mapValue(src interface{}, dst reflect.Value) {
 			value := getValue(srcValue.Field(i))
 			if len(tag) > 0 {
 				targetField := dst.FieldByName(tag)
+				if !targetField.IsValid() || !targetField.CanSet() {
+					continue
+				}
 				targetType := targetField.Type()
-				if targetField.IsValid() && targetField.CanSet() {
-					if targetType.AssignableTo(value.Type()) {
-						targetField.Set(value)
-					} else if value.Type().Kind() == reflect.Struct && (targetType.Kind() == reflect.Struct || targetType.Kind() == reflect.Ptr) {
-						p.mapValue(value.Interface(), getValue(targetField))
-					}
+				if targetType.AssignableTo(value.Type()) {
+					targetField.Set(value)
+				} else if value.Type().Kind() == reflect.Struct && (targetType.Kind() == reflect.Struct || targetType.Kind() == reflect.Ptr) {
+					p.mapValue(value.Interface(), getValue(targetField))
 				}
 			} else if field.Type.Kind() == reflect.Struct {
 				p.mapValue(value.Interface(), dst)

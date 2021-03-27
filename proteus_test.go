@@ -98,3 +98,24 @@ func TestAssignableTypes(t *testing.T) {
 	checkValue(t, src.N1, dst.No1)
 	checkValue(t, int64(0), dst.No2)
 }
+
+type SomeStruct struct {
+	F1 int `dst:"-"`
+	F2 int `dst:"f2"`
+}
+
+type SomeStruct2 struct {
+	f2 int
+}
+
+func TestZeroValues(t *testing.T) {
+	src := SomeStruct{
+		F1: 1,
+		F2: 2,
+	}
+	dst := SomeStruct2{
+		f2: 9,
+	}
+	New("dst").Map(src, &dst)
+	checkValue(t, dst.f2, 9)
+}
