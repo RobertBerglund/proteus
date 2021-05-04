@@ -1,6 +1,7 @@
 # Proteus 
 
 [![Stable Version](https://img.shields.io/github/v/tag/RobertBerglund/proteus?label=version)](https://img.shields.io/github/v/tag/RobertBerglund/proteus)
+[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
 Proteus is a tiny package for mapping values between structs using tags
 
