@@ -37,6 +37,27 @@ proteus.New("dst").Map(src, &dst)
 fmt.Printf("%+v", dst) 
 ```
 
+### Simple mapping between structs with the same field names
+```go
+type SrcSimple struct {
+	A string
+	B string
+}
+
+type DstSimple struct {
+	A string
+	C string
+}
+
+src := SrcSimple{
+	A: "a value",
+	B: "b value",
+}
+dst := DstSimple{}
+Map(src, &dst)
+//dst.A == src.A
+```
+
 ### Embedded structs
 
 An empty tag value will "flatten" the struct
