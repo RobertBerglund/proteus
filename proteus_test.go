@@ -83,7 +83,7 @@ func TestEmbeddedToNested(t *testing.T) {
 
 type SrcNumbers struct {
 	N1 int64 `dst:"No1"`
-	N2 int32 `dst:"No1"`
+	N2 int32 `dst:"No2"`
 }
 
 type DstNumbers struct {
@@ -92,11 +92,11 @@ type DstNumbers struct {
 }
 
 func TestAssignableTypes(t *testing.T) {
-	src := SrcNumbers{N1: 1, N2: 3}
+	src := SrcNumbers{N1: 1, N2: 2}
 	dst := DstNumbers{}
 	New("dst").Map(src, &dst)
 	checkValue(t, src.N1, dst.No1)
-	checkValue(t, int64(0), dst.No2)
+	checkValue(t, int64(src.N2), dst.No2)
 }
 
 type SomeStruct struct {
@@ -118,4 +118,24 @@ func TestZeroValues(t *testing.T) {
 	}
 	New("dst").Map(src, &dst)
 	checkValue(t, dst.f2, 9)
+}
+
+type SrcSimple struct {
+	A string
+	B string
+}
+
+type DstSimple struct {
+	A string
+	C string
+}
+
+func TestNoTags(t *testing.T) {
+	src := SrcSimple{
+		A: "a value",
+		B: "b value",
+	}
+	dst := DstSimple{}
+	Map(src, &dst)
+	checkValue(t, src.A, dst.A)
 }

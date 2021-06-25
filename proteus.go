@@ -27,7 +27,11 @@ func (p proteanImpl) mapValue(src interface{}, dst reflect.Value) {
 		if len(field.PkgPath) != 0 {
 			continue
 		}
-		if tag, exists := field.Tag.Lookup(p.tagName); exists {
+		tag, exists := field.Tag.Lookup(p.tagName)
+		if !exists {
+			tag = field.Name
+		}
+		if tag != "-" {
 			value := getValue(srcValue.Field(i))
 			if len(tag) > 0 {
 				targetField := dst.FieldByName(tag)
@@ -37,6 +41,8 @@ func (p proteanImpl) mapValue(src interface{}, dst reflect.Value) {
 				targetType := targetField.Type()
 				if targetType.AssignableTo(value.Type()) {
 					targetField.Set(value)
+				} else if value.Type().ConvertibleTo(targetType) {
+					targetField.Set(value.Convert(targetType))
 				} else if value.Type().Kind() == reflect.Struct && (targetType.Kind() == reflect.Struct || targetType.Kind() == reflect.Ptr) {
 					p.mapValue(value.Interface(), getValue(targetField))
 				}
@@ -57,4 +63,13 @@ func (p proteanImpl) Map(src interface{}, dst interface{}) {
 
 func New(tag string) Proteus {
 	return proteanImpl{tagName: tag}
+}
+
+var globalMapper Proteus
+
+func Map(src interface{}, dst interface{}) {
+	if globalMapper == nil {
+		globalMapper = New("")
+	}
+	globalMapper.Map(src, dst)
 }
